@@ -10,4 +10,5 @@ const CLIData: Types.EngineData = {
 };
 
 const argv = args.slice(3);
-
+const Commands = new Map<string, string>();
+const Flags = new Map<string, Types.Flag>();
