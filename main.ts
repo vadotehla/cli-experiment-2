@@ -59,10 +59,6 @@ while (x < argv.length) {
   x++;
 }
 
-console.log(Commands);
-console.log(Arguments);
-console.log(Flags);
-
 const PrimaryCommand = Commands[0] ?? null;
 if (
   (PrimaryCommand === "help" || Flags.has("h") || Flags.has("help")) &&
