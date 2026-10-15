@@ -9,18 +9,20 @@ const CLIData: Types.EngineData = {
   CLIVersion: "v1.0.0-beta",
 };
 
-const argv = args.slice(3);
-const Commands = new Map<string, string>();
+const argv = args.slice(2);
+const Commands: string[] = [];
 const Flags = new Map<string, Types.FlagInPlay>();
-const Arguments = new Map<number, string>();
+const Arguments: string[] = [];
 
 let x = 0;
 let TerminateFlags = false;
 while (x < argv.length) {
+  let done = false;
   const CurrentItem = argv[x].trim();
   if (CurrentItem.startsWith("-")) {
     if (CurrentItem === "--") {
       TerminateFlags = true;
+      done = true;
     } else if (CurrentItem !== "--" && !TerminateFlags) {
       const flag: Types.FlagInPlay = {
         FlagName: CurrentItem.slice(
@@ -46,9 +48,17 @@ while (x < argv.length) {
         } else flag.FlagValue = true;
       }
       Flags.set(flag.FlagName, flag);
+      done = true;
     }
+  }
+  if (TerminateFlags && !done) {
+    Arguments.push(CurrentItem);
+  } else if (!done) {
+    Commands.push(CurrentItem);
   }
   x++;
 }
 
+console.log(Commands);
+console.log(Arguments);
 console.log(Flags);
