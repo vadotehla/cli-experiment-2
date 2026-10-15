@@ -23,6 +23,6 @@ export interface Command {
   readonly CommandExpectedSubcommands: Set<Command> | null;
 }
 export interface FlagInPlay {
-  readonly FlagName: string;
+  FlagName: string;
   FlagValue: any;
 }

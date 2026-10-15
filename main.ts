@@ -1,5 +1,6 @@
 /** @format */
 
+import { randomBytes } from "node:crypto";
 import { argv as args, argv0, exit } from "node:process";
 
 import * as Types from "./assets/types.ts";
@@ -24,19 +25,32 @@ while (x < argv.length) {
       TerminateFlags = true;
       done = true;
     } else if (CurrentItem !== "--" && !TerminateFlags) {
+      const FlagName = CurrentItem.slice(
+        CurrentItem.startsWith("--") ? 2 : 1,
+        !CurrentItem.includes("=")
+          ? CurrentItem.length
+          : CurrentItem.indexOf("=")
+      );
       const flag: Types.FlagInPlay = {
-        FlagName: CurrentItem.slice(
-          CurrentItem.startsWith("--") ? 2 : 1,
-          !CurrentItem.includes("=")
-            ? CurrentItem.length
-            : CurrentItem.indexOf("=")
-        ),
+        FlagName,
         FlagValue: null,
       };
       if (CurrentItem.includes("=")) {
         const value = CurrentItem.slice(CurrentItem.indexOf("=") + 1);
         flag.FlagValue = value;
       } else {
+        if (!CurrentItem.startsWith("--") && FlagName.length > 1) {
+          flag.FlagName = FlagName.at(FlagName.length - 1) ?? "a";
+          for (let i = 0; i < FlagName.length - 1; i++) {
+            const piece = FlagName.at(i);
+            if (piece) {
+              Flags.set(randomBytes(8).toString("hex"), {
+                FlagName: piece,
+                FlagValue: true,
+              });
+            }
+          }
+        }
         const y = x + 1;
         const value = argv[y];
         if (value) {
@@ -47,7 +61,7 @@ while (x < argv.length) {
           }
         } else flag.FlagValue = true;
       }
-      Flags.set(flag.FlagName, flag);
+      Flags.set(randomBytes(8).toString("hex"), flag);
       done = true;
     }
   }
