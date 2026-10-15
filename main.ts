@@ -1,6 +1,6 @@
 /** @format */
 
-import { argv as args, argv0 } from "node:process";
+import { argv as args, argv0, exit } from "node:process";
 
 import * as Types from "./assets/types.ts";
 
@@ -62,3 +62,14 @@ while (x < argv.length) {
 console.log(Commands);
 console.log(Arguments);
 console.log(Flags);
+
+const PrimaryCommand = Commands[0] ?? null;
+if (
+  (PrimaryCommand === "help" || Flags.has("h") || Flags.has("help")) &&
+  Commands.length < 2
+) {
+  console.log(`${argv0} help`);
+  console.log(`${CLIData.CLIName} => ${CLIData.CLIVersion}`);
+
+  exit(0);
+}
