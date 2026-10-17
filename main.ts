@@ -58,6 +58,7 @@ while (x < argv.length) {
             flag.FlagValue = true;
           } else {
             flag.FlagValue = value;
+            x++;
           }
         } else flag.FlagValue = true;
       }
@@ -74,10 +75,10 @@ while (x < argv.length) {
 }
 
 const PrimaryCommand = Commands[0] ?? null;
-if (
-  (PrimaryCommand === "help" || Flags.has("h") || Flags.has("help")) &&
-  Commands.length < 2
-) {
+const HasHelp = [...Flags.values()].some(
+  v => v.FlagName === "h" || v.FlagName === "help"
+);
+if ((PrimaryCommand === "help" || HasHelp) && Commands.length < 2) {
   console.log(`${argv0} help`);
   console.log(`${CLIData.CLIName} => ${CLIData.CLIVersion}`);
 
